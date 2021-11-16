@@ -5,11 +5,20 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.SocketException;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 
 public class Main {
+	
+	@SuppressWarnings("serial")
+	public static final Map<Integer, String> FILE_TYPE = new HashMap<Integer, String>() {{
+		put(FTPFile.DIRECTORY_TYPE, "Directorio");
+		put(FTPFile.FILE_TYPE, "Fichero");
+		put(FTPFile.SYMBOLIC_LINK_TYPE, "Enlace");
+	}};
 
 	public static void main(String [] args) {
 		try {
@@ -20,7 +29,7 @@ public class Main {
 			// conectar con el servidor FTP
 			cliente.connect("ftp.rediris.es", 21);
 			
-			// iniciar sesión anónimo (login)
+			// iniciar sesión anónima (login)
 			cliente.login("", "");
 			
 			// cambiar el directorio actual en el servidor
@@ -36,14 +45,14 @@ public class Main {
 			// recorrer el listado de archivos recuperados
 			System.out.format("+------------------------+%n");
 			System.out.format("| Archivos del servidor: |%n");
-			System.out.format("+------------------------+---------+----------------+-----------------+%n");
-			System.out.format("| Nombre                           | Tamaño (bytes) | Tipo            |%n");
-			System.out.format("+----------------------------------+----------------+-----------------+%n");
+			System.out.format("+------------------------+-----------------+----------------+-----------------+%n");
+			System.out.format("| Nombre                                   | Tamaño (bytes) | Tipo            |%n");
+			System.out.format("+------------------------------------------+----------------+-----------------+%n");
 			Arrays.stream(ficheros)
 				.forEach(fichero -> {
-				    System.out.format("| %-32s | %-14d | %-15s |%n", fichero.getName(), fichero.getSize(), getTipo(fichero));					
+				    System.out.format("| %-40s | %-14d | %-15s |%n", fichero.getName(), fichero.getSize(), FILE_TYPE.get(fichero.getType()));
 				});
-			System.out.format("+----------------------------------+----------------+-----------------+%n");
+			System.out.format("+------------------------------------------+----------------+-----------------+%n");
 			
 			// cambiar el directorio padre en el servidor
 			cliente.changeWorkingDirectory("..");
@@ -65,17 +74,5 @@ public class Main {
 		}
 	}
 
-	public static String getTipo(FTPFile fichero) {
-		switch (fichero.getType()) {
-		case FTPFile.DIRECTORY_TYPE:
-			return "Directorio";
-		case FTPFile.FILE_TYPE:
-			return "Fichero";
-		case FTPFile.SYMBOLIC_LINK_TYPE:
-			return "Enlace";
-		default:
-			return "Desconocido";
-		}
-	}
 
 }
