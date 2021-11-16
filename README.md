@@ -138,11 +138,21 @@ Al conectar se deberá mostrar en la etiqueta encima de la tabla el directorio a
 
 ### 4. Explorar sistema de ficheros remoto
 
-Al hacer doble clic sobre un directorio de la tabla se deberá entrar en él, actualizando la encima de la tabla indicando que hemos cambiado de directorio y rellenando la tabla con el contenido del nuevo directorio: 
+Al hacer doble clic sobre un directorio de la tabla se deberá entrar en él, actualizando la ruta que hay encima de la tabla, indicando así que hemos cambiado de directorio y rellenando la tabla con el contenido del nuevo directorio: 
 
 ![](docs/009.png)
 
-Doble clic sobre directorio para entrar en él 
+Debemos implementar el evento [`onMouseClicked`](https://openjfx.io/javadoc/11/javafx.graphics/javafx/scene/Node.html#setOnMouseClicked()) de la tabla, de un modo similar al siguiente:
+
+```java
+@FXML
+private void onTablaMouseClicked(MouseEvent e) {
+    // si se ha pulsado dos veces y hay un elemento seleccionado en la tabla
+    if (e.getClickCount() == 2 && tabla.getSelectionModel().getSelectedItem() != null) {
+        // TODO implementar aquí la acción del doble click
+    }	
+}
+```
 
 ### 5. Descargar  
 
